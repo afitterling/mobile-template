@@ -1,0 +1,59 @@
+html {
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    box-sizing: border-box;
+    position: fixed;
+    -webkit-flex: 1;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    justify-content: stretch;
+    /*background :red;*/
+    border: 2px dashed silver;
+    height: 100vh;
+    width: 100vw;
+}
+
+body > header {
+    height: 10%;
+    background: rgba(0,0,0,0.5);
+}
+
+body > footer {
+    height: 10%;
+    background: rgba(0,0,0,0.5);
+}
+
+body > section {
+    -webkit-flex: 1;
+}
+
+#main {
+    height: 100%;
+    background: green;
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#pane-right {
+    width: 20%;
+    height: 80%;
+    background: red;
+    overflow: hidden;
+}
+
+#scroll-pane-1 {
+    width: 100%;
+    height: 4000px;
+    background: red;
+}
+

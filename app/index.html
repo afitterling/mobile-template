@@ -1,37 +1,41 @@
 <!-- mobile template for a auto scale fullscreen web app, for phones, pads -->
 <!DOCTYPE html>
-<html>
+<html ng-app="webApp">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <!--<link rel="icon" sizes="192x192" href="/icon.png">-->
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/app.css">
+
     <style>
-        html {
-            display: -webkit-flex;
-            -webkit-flex-direction: column;
-            box-sizing: border-box;
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
         }
-
-        *, *:before, *:after {
-            box-sizing: inherit;
-        }
-
-        body {
-            margin: 0;
-            display: -webkit-flex;
-            -webkit-flex-direction: column;
-            /*background :red;*/
-            border: 2px dashed silver;
-            height: 100vh;
-        }
-
     </style>
-</head>
-<body>
-<div>
 
-</div>
+</head>
+<body ng-cloak ng-controller="AppCtrl as app">
+<header>
+</header>
+<section id="main">
+   <div id="pane-right">
+       <div id="scroll-pane-1">
+           <ul>
+               <li ng-repeat="item in app.items">{{item.id}}</li>
+           </ul>
+       </div>
+   </div>
+</section>
+
+<footer></footer>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+
+<script src="app.js"></script>
+
 <script>
     // block any incompatible browsers
     if(window.ActiveXObject || "ActiveXObject" in window){
@@ -42,6 +46,12 @@
     document.addEventListener("DOMContentLoaded", function () {
         console.log('content loaded');
     });
+
+    // disable bouncing viewport pane on touch move
+    document.addEventListener("touchmove", function(event){
+        event.preventDefault(); // use stopPropagation on childs to allow scroll
+    });
+
 </script>
 </body>
 </html>
