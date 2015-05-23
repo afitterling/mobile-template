@@ -1,0 +1,43 @@
+<!-- mobile template for a web app phone, pads to overcome media queries -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        html {
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            margin: 0;
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            /*background :red;*/
+            border: 2px dashed silver;
+            height: 100vh;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+
+</div>
+<script>
+    // block any incompatible browsers
+    if(window.ActiveXObject || "ActiveXObject" in window){
+        // Always true if browser is Internet Explorer
+        window.location = 'notsupported.html'; // or fail save page
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log('content loaded');
+    });
+</script>
+</body>
+</html>
