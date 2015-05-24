@@ -49,6 +49,7 @@ body > section {
     height: 80%;
     background: red;
     overflow: hidden;
+    /*overflow-y: scroll; *//* has to be scroll, not auto */
 }
 
 #scroll-pane-1 {
@@ -57,3 +58,34 @@ body > section {
     background: red;
 }
 
+
+#console {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 400px;
+    height: 150px;
+    background: rgba(0,0,0,0.2);
+}
+
+/*//ripple*/
+
+[angular-ripple] {
+    position: relative;
+    overflow: hidden;
+}
+.angular-ripple {
+    display: block;
+    position: absolute;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 50%;
+    transform: scale(0);
+}
+.angular-ripple.animate {
+    animation: ripple 0.35s linear;
+}
+@keyframes ripple {
+    100% {
+        opacity: 0;
+        transform: scale(2.5);
+    }
+}

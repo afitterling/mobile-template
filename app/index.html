@@ -20,8 +20,9 @@
 <header>
 </header>
 <section id="main">
-   <div id="pane-right">
-       <div id="scroll-pane-1">
+   <!--<div id="pane-right" angular-ripple>-->
+   <div id="pane-right" hammer-pan>
+       <div id="scroll-pane-1" style="background: yellow;">
            <ul>
                <li ng-repeat="item in app.items">{{item.id}}</li>
            </ul>
@@ -31,9 +32,13 @@
 
 <footer></footer>
 
+<div id="console">Console</div>
+
 <script src="/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/bower_components/hammerjs/hammer.min.js"></script>
+<script src="/bower_components/velocity/velocity.min.js"></script>
 <script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/angular-ripple/angular-ripple.js"></script>
 
 <script src="app.js"></script>
 
@@ -52,6 +57,10 @@
     document.addEventListener("touchmove", function(event){
         event.preventDefault(); // use stopPropagation on childs to allow scroll
     });
+
+//    window.document.getElementById('main').addEventListener("touchmove", function(event){
+//        event.stopPropagation(); // use stopPropagation on childs to allow scroll
+//    });
 
 </script>
 </body>
