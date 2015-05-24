@@ -55,7 +55,7 @@ angular.module('webApp', [
 
         mc.on("pan", handleInteraction);
 
-        var _y;
+        var _y, _ys = 0, _yb = $('#scroll-pane-1').offset().top;
 
         function handleInteraction(e){
           _y = e.deltaY;
@@ -64,21 +64,24 @@ angular.module('webApp', [
             $('#scroll-pane-1').velocity('stop')
               .velocity('scroll',
               {
+                begin: function() {
+                  _ys = $('#scroll-pane-1').offset().top - _yb;
+                  console.log('beginn triggered: _ys', _ys, _yb);
+                },
                 axis: 'y',
                 container: $('#pane-right'),
                 mobileHA: false,
                 offset: -(_y - (300 * e.velocityY)),
-//              offset: -(_y),
                 duration: e.velocityY * 800 ,
-//              duration: 10,
-                easing: 'ease-out',
-                progress: function(elements, c, r, s, t) {
-                  console.log("The current tween value is " + t)
-                }
+                easing: 'ease-out'
+//                ,
+//                progress: function(elements, c, r, s, t) {
+//                  console.log("The current tween value is " + t)
+//                }
               }
             );
           } else {
-            $('#scroll-pane-1').velocity('stop').velocity('scroll', { container: $("#pane-right"), offset: -(_y), duration: 10 });
+            $('#scroll-pane-1').velocity('stop').velocity('scroll', { container: $("#pane-right"), offset: -(_y - _ys), duration: 10 });
           }
         };
 
