@@ -56,23 +56,21 @@ angular.module('webApp', [
         pan.recognizeWith(tap);
 
         mc.add( pan );
-//        mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
-//        mc.add( new Hammer.Tap({ event: 'tap', taps: 1 }));
 
         mc.on('pan', handleUIEvents);
-//        mc.on('tap', handleUIEventTap);
 
-        var _y, _ys, _yb, _momentum;
+        var _y, _ys, _momentum;
 
         _ys = 0;
-        _yb = -($('#scroll-pane-1').offset().top);
         _momentum = true;
 
+        // would like to handle tap and pan at the same time
+        // but only get pan as pan has not returned yet, when tapped
         function handleUIEvents(e){
           _y = e.deltaY;
           console.log(e.type, e, e.changedPointers[0].pageY);
-          if (e.type === 'pan' && e.isFinal && _momentum){
-//          if (_momentum){
+
+          if (e.isFinal && _momentum){
             // if isFinal the finger left the touch surface and the last element may have velocity to be useful for momentum
             $('#scroll-pane-1').velocity('finish').velocity('scroll', {
               container: $("#pane-right"),
@@ -81,11 +79,12 @@ angular.module('webApp', [
               begin: function(){
               },
               complete: function() {
-//                if (e.isFinal) return;
-                console.log('called');
                 _ys = -($('#scroll-pane-1').offset().top);
               },
               easing: 'ease-out',
+              progress: function(){
+                console.log(e.type);
+              },
               offset: (- _y + _ys + (200 * e.velocityY)),
               duration: Math.abs(e.velocityY * 400)
             });
@@ -99,7 +98,6 @@ angular.module('webApp', [
               begin: function(){
               },
               complete: function() {
-                console.log('else called');
                 if (!e.isFinal) return;
                 _ys = -($('#scroll-pane-1').offset().top);
               },
