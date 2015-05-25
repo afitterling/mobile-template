@@ -51,37 +51,61 @@ angular.module('webApp', [
 
         var mc = new Hammer.Manager(ele[0], {});
 
-        mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
+        var pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
+        var tap = new Hammer.Tap();
+        pan.recognizeWith(tap);
 
-        mc.on("pan", handleInteraction);
+        mc.add( pan );
+//        mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
+//        mc.add( new Hammer.Tap({ event: 'tap', taps: 1 }));
 
-        var _y, _ys = 0, _yb = $('#scroll-pane-1').offset().top;
+        mc.on('pan', handleUIEvents);
+//        mc.on('tap', handleUIEventTap);
 
-        function handleInteraction(e){
+        var _y, _ys, _yb, _momentum;
+
+        _ys = 0;
+        _yb = -($('#scroll-pane-1').offset().top);
+        _momentum = true;
+
+        function handleUIEvents(e){
           _y = e.deltaY;
           console.log(e.type, e, e.changedPointers[0].pageY);
-          if (e.isFinal){
-            $('#scroll-pane-1').velocity('stop')
-              .velocity('scroll',
-              {
-                begin: function() {
-                  _ys = $('#scroll-pane-1').offset().top - _yb;
-                  console.log('beginn triggered: _ys', _ys, _yb);
-                },
-                axis: 'y',
-                container: $('#pane-right'),
-                mobileHA: false,
-                offset: -(_y - (300 * e.velocityY)),
-                duration: e.velocityY * 800 ,
-                easing: 'ease-out'
-//                ,
-//                progress: function(elements, c, r, s, t) {
-//                  console.log("The current tween value is " + t)
-//                }
-              }
-            );
+          if (e.type === 'pan' && e.isFinal && _momentum){
+//          if (_momentum){
+            // if isFinal the finger left the touch surface and the last element may have velocity to be useful for momentum
+            $('#scroll-pane-1').velocity('finish').velocity('scroll', {
+              container: $("#pane-right"),
+              mobileHA: false,
+              axis: 'y',
+              begin: function(){
+              },
+              complete: function() {
+//                if (e.isFinal) return;
+                console.log('called');
+                _ys = -($('#scroll-pane-1').offset().top);
+              },
+              easing: 'ease-out',
+              offset: (- _y + _ys + (200 * e.velocityY)),
+              duration: Math.abs(e.velocityY * 400)
+            });
           } else {
-            $('#scroll-pane-1').velocity('stop').velocity('scroll', { container: $("#pane-right"), offset: -(_y - _ys), duration: 10 });
+            // if not isFinal user's still panning and moving around
+            $('#scroll-pane-1').velocity('finish').velocity('scroll', {
+              container: $("#pane-right"),
+              mobileHA: false,
+              easing: 'ease-out',
+              axis: 'y',
+              begin: function(){
+              },
+              complete: function() {
+                console.log('else called');
+                if (!e.isFinal) return;
+                _ys = -($('#scroll-pane-1').offset().top);
+              },
+              offset: (- _y + _ys),
+              duration: 20
+            });
           }
         };
 
