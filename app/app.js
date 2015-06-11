@@ -25,7 +25,7 @@ angular.module('webApp', [
 
 .directive('hammerTap', function(){
     return {
-      scope: {},
+//      scope: {},
       link: function(scope, ele){
 
         var mc = new Hammer.Manager(ele[0], {});
@@ -46,63 +46,74 @@ angular.module('webApp', [
   // handles hammer pan with momentum
   .directive('hammerPan', function(){
     return {
-      scope: {},
+//      scope: {},
       link: function(scope, ele){
 
+        var _y, _ys, _momentum, _interruptPan;
+
+        _ys = 0;
+        _momentum = true;
+
         var mc = new Hammer.Manager(ele[0], {});
+        var mc2 = new Hammer.Manager(ele[0], {});
 
         var pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
         var tap = new Hammer.Tap();
         pan.recognizeWith(tap);
 
         mc.add( pan );
+        mc2.add( tap );
 
         mc.on('pan', handleUIEvents);
 
-        var _y, _ys, _momentum;
+        mc2.on('tap', function(){
+          _interruptPan = true;
+          console.log('interruped');
+        });
 
-        _ys = 0;
-        _momentum = true;
+        var $scrollpane = $('#scroll-pane-1');
 
         // would like to handle tap and pan at the same time
         // but only get pan as pan has not returned yet, when tapped
         function handleUIEvents(e){
-          _y = e.deltaY;
           console.log(e.type, e, e.changedPointers[0].pageY);
+
+          _y = e.deltaY;
 
           if (e.isFinal && _momentum){
             // if isFinal the finger left the touch surface and the last element may have velocity to be useful for momentum
-            $('#scroll-pane-1').velocity('finish').velocity('scroll', {
+            $scrollpane.velocity('finish').velocity('scroll', {
               container: $("#pane-right"),
-              mobileHA: false,
+//              mobileHA: false,
               axis: 'y',
               begin: function(){
               },
               complete: function() {
-                _ys = -($('#scroll-pane-1').offset().top);
+                _ys = -($scrollpane.offset().top);
               },
               easing: 'ease-out',
               progress: function(){
                 console.log(e.type);
+                if (_interruptPan) _y = _ys;
               },
               offset: (- _y + _ys + (200 * e.velocityY)),
               duration: Math.abs(e.velocityY * 400)
             });
           } else {
             // if not isFinal user's still panning and moving around
-            $('#scroll-pane-1').velocity('finish').velocity('scroll', {
+            $scrollpane.velocity('finish').velocity('scroll', {
               container: $("#pane-right"),
-              mobileHA: false,
-              easing: 'ease-out',
+//              mobileHA: false,
+//              easing: 'ease-out',
               axis: 'y',
               begin: function(){
               },
               complete: function() {
                 if (!e.isFinal) return;
-                _ys = -($('#scroll-pane-1').offset().top);
+                _ys = -($scrollpane.offset().top);
               },
               offset: (- _y + _ys),
-              duration: 20
+              duration: 10
             });
           }
         };
